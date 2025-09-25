@@ -1,0 +1,23 @@
+[project]
+name = "testovoe-secunda"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "danila",email = "garipotter97@gmail.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi (>=0.117.1,<0.118.0)",
+    "pydantic-settings (>=2.11.0,<3.0.0)",
+    "sqlalchemy[asyncio] (>=2.0.43,<3.0.0)",
+    "asyncpg (>=0.30.0,<0.31.0)",
+    "alembic (>=1.16.5,<2.0.0)",
+    "orjson (>=3.11.3,<4.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
