@@ -23,6 +23,14 @@ class Db(BaseModel):
 
 class ApiV1Prefix(BaseModel):
     prefix: str = "/v1"
+    organization: str = "/organization"
+    building: str = "/building"
+    activity: str = "/activity"
+    geo: str = "/geo"
+
+
+class Security(BaseModel):
+    api_token: str
 
 
 class ApiPrefix(BaseModel):
@@ -48,6 +56,7 @@ class Settings(BaseSettings):
     db: Db
     api: ApiPrefix = ApiPrefix()
     app: RunApp = RunApp()
+    security: Security
 
 
 settings = Settings()
