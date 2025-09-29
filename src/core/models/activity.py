@@ -1,3 +1,4 @@
+from sqlalchemy import CheckConstraint, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy_utils import LtreeType
 from typing import List, TYPE_CHECKING
@@ -20,4 +21,9 @@ class Activity(IdIntPkMixin, Base):
 
     organizations: Mapped[List["Organization"]] = relationship(
         secondary=organization_activities, back_populates="activities"
+    )
+
+    __table_args__ = (
+        CheckConstraint("nlevel(path) <= 3", name="max_nesting_level_3"),
+        Index("idx_activities_path_gin", "path", postgresql_using="gin"),
     )
