@@ -51,14 +51,14 @@ echo "🌱 Seeding database with test data..."
 psql -h db -p 5432 -U "${POSTGRES_USER:-postgres}" -d "${POSTGRES_DB:-secundadb}" -q <<-EOSQL
 -- Activities (path LTREE; таблица 'activities' — если 'activitys', измени)
 INSERT INTO activitys (name, path, level) VALUES
-('Еда', 'еда'::ltree, 0),
-('Мясная продукция', 'еда.мясная'::ltree, 1),
-('Молочная продукция', 'еда.молочная'::ltree, 1),
-('Автомобили', 'автомобили'::ltree, 0),
-('Грузовые', 'автомобили.грузовые'::ltree, 1),
-('Легковые', 'автомобили.легковые'::ltree, 1),
-('Запчасти', 'автомобили.легковые.запчасти'::ltree, 2),
-('Аксессуары', 'автомобили.легковые.аксессуары'::ltree, 2)
+('Еда', 'food'::ltree, 0),
+('Мясная продукция', 'food.meat'::ltree, 1),
+('Молочная продукция', 'food.dairy'::ltree, 1),
+('Автомобили', 'automobiles'::ltree, 0),
+('Грузовые', 'automobiles.trucks'::ltree, 1),
+('Легковые', 'automobiles.cars'::ltree, 1),
+('Запчасти', 'automobiles.cars.parts'::ltree, 2),
+('Аксессуары', 'automobiles.cars.accessories'::ltree, 2)
 ON CONFLICT (id) DO NOTHING;
 
 -- Buildings (PostGIS geometry)
