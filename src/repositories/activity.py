@@ -1,7 +1,8 @@
-from sqlalchemy import select, ScalarResult
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload, joinedload
 from typing import Type, Sequence
+from sqlalchemy_utils import Ltree
 
 from core.models import Activity, Organization
 
@@ -18,11 +19,11 @@ class ActivityRepository:
             .where(self.activity_model.name == activity_name)
             .options(selectinload(self.activity_model.organizations))
         )
-        scalar_result: ScalarResult[Activity] = await self.session.scalars(stmt)
-        return scalar_result.unique().one_or_none()
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
 
     async def get_organizations_by_activity_tree(
-        self, activity_path: str
+        self, activity_path: Ltree
     ) -> Sequence[Organization]:
         stmt = (
             select(self.organizations_model)
