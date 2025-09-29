@@ -1,6 +1,6 @@
 from typing import Sequence
-
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy_utils import Ltree
 
 from core.models import Activity, Organization
 from repositories import ActivityRepository
@@ -24,8 +24,9 @@ class ActivityService:
     async def search_organizations_by_activity_tree(
         self, activity_path: str
     ) -> Sequence[Organization]:
+        ltree_path = Ltree(activity_path)
         organizations = await self.activity_repo.get_organizations_by_activity_tree(
-            activity_path
+            ltree_path
         )
 
         if not organizations:
