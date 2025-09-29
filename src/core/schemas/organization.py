@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import List
 
 
@@ -8,6 +8,8 @@ from .activity import ActivityRead
 
 class PhoneNumber(BaseModel):
     phone_number: str
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class OrganizationBase(BaseModel):
@@ -21,8 +23,7 @@ class OrganizationRead(BaseModel):
     building: "BuildingRead"
     activities: List["ActivityRead"]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class OrganizationSearchRequest(OrganizationBase):
@@ -34,7 +35,16 @@ class OrganizationSearchResponse(BaseModel):
 
 
 class OrganizationDetailResponse(OrganizationRead):
-    pass
+
+    @classmethod
+    def from_orm(cls, org_obj):
+        return cls(
+            id=org_obj.id,
+            name=org_obj.name,
+            phone_numbers=[PhoneNumber.model_validate(pn) for pn in org_obj.phone_numbers],
+            building=BuildingRead.model_validate(org_obj.building),
+            activities=[ActivityRead.model_validate(act) for act in org_obj.activities]
+        )
 
 
 OrganizationDetailResponse.model_rebuild()
