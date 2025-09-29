@@ -26,6 +26,6 @@ class OrganizationService:
         )
 
         if organization is None:
-            OrganizationNotFoundByName(organization_name)
+            raise OrganizationNotFoundByName(organization_name)
 
         return organization
