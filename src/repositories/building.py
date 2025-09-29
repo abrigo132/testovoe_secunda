@@ -1,10 +1,10 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Type, Sequence
-from sqlalchemy import select, ScalarResult
+from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from geoalchemy2 import functions as gis_func
 
-from core.models import Building
+from core.models import Building, Organization
 
 
 class BuildingRepository:
@@ -18,8 +18,8 @@ class BuildingRepository:
             .where(self.model.id == building_id)
             .options(selectinload(self.model.organizations))
         )
-        scalar_result: ScalarResult[Building] = await self.session.scalars(stmt)
-        return scalar_result.one_or_none()
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
 
     async def get_buildings_in_radius(
         self,
@@ -29,16 +29,14 @@ class BuildingRepository:
     ) -> Sequence[Building]:
         radius_meters = radius_km * 1000
 
-        point = gis_func.ST_SetSRID(gis_func.ST_MakePoint(lat, lng), 4326)
+        point = gis_func.ST_SetSRID(gis_func.ST_MakePoint(lng, lat), 4326)
 
         stmt = (
             select(self.model)
             .where(gis_func.ST_DWithin(self.model.coords, point, radius_meters))
             .options(
-                selectinload(self.model.organizations).options(
-                    selectinload(self.model.organizations.phone_numbers),
-                    selectinload(self.model.organizations.activities),
-                )
+                selectinload(self.model.organizations).selectinload(Organization.phone_numbers),
+                selectinload(self.model.organizations).selectinload(Organization.activities),
             )
         )
         result = await self.session.execute(stmt)
