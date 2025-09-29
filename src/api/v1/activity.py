@@ -36,14 +36,14 @@ async def get_activity_with_organization(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
 
-@router.get("/search/organizations/", response_model=List[OrganizationShort])
+@router.get("/{activity_path:path}/search/organizations/", response_model=List[OrganizationShort])
 async def search_organizations_by_activity_tree(
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
-    activity_path: str = Query(..., description="LTREE path, например: 'еда'"),
+    activity_path: str,
 ):
     """
     Простой поиск: все организации в дереве деятельности
-    Пример: /api/v1/activities/search/organizations?activity_path=еда
+    Пример: /api/v1/activities/еда/organizations/
     Найдёт организации для: Еда, Мясная продукция, Молочная продукция
     """
     try:
