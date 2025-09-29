@@ -19,8 +19,8 @@ class OrganizationRepository:
             .where(self.model.id == organization_id)
             .options(*self._get_loading_options())
         )
-        result: ScalarResult[Organization] = await self.session.scalars(stmt)
-        return result.unique().one_or_none()
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
 
     async def get_by_name(
         self,
@@ -31,8 +31,8 @@ class OrganizationRepository:
             .where(self.model.name == organization_name)
             .options(*self._get_loading_options())
         )
-        result: ScalarResult[Organization] = await self.session.scalars(stmt)
-        return result.unique().one_or_none()
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
 
     def _get_loading_options(self):
         """Общие опции загрузки связей"""
