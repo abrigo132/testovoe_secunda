@@ -16,7 +16,7 @@ router = APIRouter(
 )
 
 
-@router.get("/{organization_id}/", response_model=OrganizationDetailResponse)
+@router.get("/{organization_id}/detail_id/", response_model=OrganizationDetailResponse)
 async def get_organization(
     organization_id: int,
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
@@ -25,12 +25,11 @@ async def get_organization(
         organization = await OrganizationService(session=session).get_by_id(
             organization_id=organization_id,
         )
-        return OrganizationDetailResponse.model_validate(organization)
+        return OrganizationDetailResponse.from_orm(organization)
     except OrganizationNotFoundById as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
-
-@router.get("/{organization_name}/", response_model=OrganizationDetailResponse)
+@router.get("/{organization_name}/detail_name/", response_model=OrganizationDetailResponse)
 async def get_organization(
     organization_name: str,
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
@@ -39,6 +38,11 @@ async def get_organization(
         organization = await OrganizationService(session=session).get_by_name(
             organization_name=organization_name,
         )
-        return OrganizationDetailResponse.model_validate(organization)
+        return OrganizationDetailResponse.from_orm(organization)
     except OrganizationNotFoundByName as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+
+
+
+
+
