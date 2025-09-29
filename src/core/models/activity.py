@@ -23,7 +23,4 @@ class Activity(IdIntPkMixin, Base):
         secondary=organization_activities, back_populates="activities"
     )
 
-    __table_args__ = (
-        CheckConstraint("nlevel(path) <= 3", name="max_nesting_level_3"),
-        Index("idx_activities_path_gin", "path", postgresql_using="gin"),
-    )
+    __table_args__ = (CheckConstraint("nlevel(path) <= 3", name="max_nesting_level_3"),)
