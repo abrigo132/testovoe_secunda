@@ -46,7 +46,7 @@ REST API сервис для управления справочником ор�
 
 1. Клонируйте репозиторий:
 ```bash
-git clone https://github.com/abrigo132/tezonos_ascunda.git
+git clone https://github.com/abrigo132/testovoe_secunda.git
 cd src
 docker compose up --build
 ```
